@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Check changed files
         id: changes
@@ -49,6 +51,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Check changed files
         id: changes
@@ -86,6 +90,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Check changed files
         id: changes
@@ -117,3 +123,42 @@ jobs:
       - name: Build Docker image
         if: steps.changes.outputs.changed == 'true'
         run: docker build -t golubeva-opcua students/golubeva/
+
+check-khabarov:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check changed files
+        id: changes
+        run: |
+          git fetch origin main
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          if echo "$CHANGED" | grep -q "^students/khabarov/"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          pip install flake8
+          pip install -r students/khabarov/requirements.txt
+
+      - name: Lint code
+        if: steps.changes.outputs.changed == 'true'
+        run: flake8 students/khabarov/src/ --max-line-length=120
+
+      - name: Build Docker image
+        if: steps.changes.outputs.changed == 'true'
+        run: docker build -t khabarov-opcua students/khabarov/
