@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  check-mamaev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check changed files
+        id: changes
+        run: |
+          git fetch origin main
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          if echo "$CHANGED" | grep -q "^students/mamaev/"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          pip install flake8
+          pip install -r students/mamaev/requirements.txt
+
+      - name: Lint code
+        if: steps.changes.outputs.changed == 'true'
+        run: flake8 students/mamaev/src/ --max-line-length=120
+
+      - name: Build Docker image
+        if: steps.changes.outputs.changed == 'true'
+        run: docker build -t mamaev-opcua students/mamaev/
+
+  check-rikhelgof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check changed files
+        id: changes
+        run: |
+          git fetch origin main
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          if echo "$CHANGED" | grep -q "^students/rikhelgof/"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          pip install flake8
+          pip install -r students/rikhelgof/requirements.txt
+
+      - name: Lint code
+        if: steps.changes.outputs.changed == 'true'
+        run: flake8 students/rikhelgof/src/ --max-line-length=120
+
+      - name: Build Docker image
+        if: steps.changes.outputs.changed == 'true'
+        run: docker build -t rikhelgof-opcua students/rikhelgof/
+
+  check-golubeva:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check changed files
+        id: changes
+        run: |
+          git fetch origin main
+          CHANGED=$(git diff --name-only origin/main...HEAD)
+          if echo "$CHANGED" | grep -q "^students/golubeva/"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Python
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          pip install flake8
+          pip install -r students/golubeva/requirements.txt
+
+      - name: Lint code
+        if: steps.changes.outputs.changed == 'true'
+        run: flake8 students/golubeva/src/ --max-line-length=120
+
+      - name: Build Docker image
+        if: steps.changes.outputs.changed == 'true'
+        run: docker build -t golubeva-opcua students/golubeva/
