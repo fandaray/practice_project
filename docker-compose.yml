@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+
+  golubeva:
+    build: ./students/golubeva
+    container_name: opcua-golubeva
+    ports:
+      - "4841:4840"
+    restart: unless-stopped
+
+  mamaev:
+    build: ./students/mamaev
+    container_name: opcua-mamaev
+    ports:
+      - "4842:4840"
+    restart: unless-stopped
+
+  rikhelgof:
+    build: ./students/rikhelgof
+    container_name: opcua-rikhelgof
+    ports:
+      - "4843:4840"
+    restart: unless-stopped
+
+  khabarov:
+    build: ./students/khabarov
+    container_name: opcua-khabarov
+    ports:
+      - "4844:4840"
+    restart: unless-stopped
