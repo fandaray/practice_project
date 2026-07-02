@@ -13,6 +13,7 @@
 | students/khabarov/ | Хабаров |
 
 ## Структура папки каждого студента
+```
 students/<имя>/
 ├── src/
 │   ├── boiler_model.py
@@ -23,6 +24,7 @@ students/<имя>/
 ├── requirements.txt
 ├── Dockerfile
 └── README.md
+```
 
 ## Как работать
 1. Клонируй репозиторий
