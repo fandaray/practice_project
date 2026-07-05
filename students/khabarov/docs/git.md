@@ -99,7 +99,7 @@ git clone
 
 # Добавление удалённого репозитория
 git remote add origin 
-
+```
 **2. Ежедневный workflow**
 ```Bash
 
@@ -118,7 +118,7 @@ git push origin main
 
 # Получение изменений
 git pull origin main
-
+```
 **3. Работа с ветками**
 ```Bash
 
@@ -133,7 +133,7 @@ git checkout main
 
 # Слияние ветки
 git merge 
-
+```
 **4. Полезные команды**
 ```Bash
 
@@ -152,7 +152,7 @@ git checkout -- boiler_model.py
 # Удаление файла из индекса
 git rm --cached large_file.bin
 
-
+```
 ---
 
 ## Полезные расширения VS Code для Git
