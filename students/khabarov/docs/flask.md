@@ -124,7 +124,7 @@ def set_valve():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
+```
 ### 2. Application Factory
 
 ```python
@@ -147,7 +147,7 @@ def create_app():
     app.register_blueprint(api_bp, url_prefix='/api')
     
     return app
-
+```
 3. Пример интеграции с OPC UA
 ```python
 # app/api/opc.py
@@ -173,7 +173,7 @@ def get_opc_status():
         return jsonify(data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+```
 4. Шаблон Jinja2
 ```HTML
 
@@ -193,7 +193,7 @@ def get_opc_status():
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
-
+```
 ## Полезные расширения Flask
 
 - Flask-SQLAlchemy — работа с БД
