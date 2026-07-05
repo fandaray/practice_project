@@ -83,7 +83,7 @@ level_node = boiler.add_variable(idx, "WaterLevel", 0.0)
 temp_node.set_writable(True)
 
 
-Загрузка тегов из CSV (полезный пример)
+Загрузка тегов из CSV:
 ```python
 import csv
 from opcua import ua
@@ -99,13 +99,14 @@ with open("tags.csv", encoding="utf-8") as f:
         node = boiler.add_variable(idx, name, value)
         if writable:
             node.set_writable()
+```
 Структура tags.csv:
 ```csv
 name,value,writable
 OutputTemp,25.0,True
 WaterLevel,0.0,False
 ValveHotIn,0.5,True
-
+```
 ## Недостатки OPC UA
 1. Сложность внедрения (выше порог входа)
 2. Производительность чуть ниже OPC DA в простых случаях
