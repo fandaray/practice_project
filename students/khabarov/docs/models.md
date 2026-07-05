@@ -121,7 +121,7 @@ class BoilerModel:
         self.valve_hot = 0.5
         self.valve_cold = 0.5
         self.valve_out = 1.0
-
+```
 ## run_model.py (ПОМЕНЯТЬ!!!)
 
 ```python
@@ -191,5 +191,4 @@ if __name__ == "__main__":
         client.set_value("StartSimulation", False)
         client.disconnect()
         print("🔌 OPC UA клиент отключён. Модель остановлена.")
-
-    
+```
