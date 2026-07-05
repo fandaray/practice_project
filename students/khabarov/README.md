@@ -52,8 +52,7 @@ python history_logger.py
 **5. Для теста или мониторинга можно запустить клиент:**
 ```bash
 **python opcua_client.py**
-
-
+```
 ##  Документация и полезные ссылки
 
 [OPC](https://github.com/fandaray/practice_project/tree/main/students/khabarov/docs/opc).
