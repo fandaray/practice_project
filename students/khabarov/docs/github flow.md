@@ -69,6 +69,7 @@ cd practice_project
 git checkout main
 git pull origin main
 ```
+
 ### 2. Создание новой ветки
 ```bash
 
@@ -81,6 +82,7 @@ git checkout -b bugfix/fix-boiler-temperature-calculation
 # Для документации
 git checkout -b docs/update-models-guide
 ```
+
 ### 3. Работа над задачей
 ```bash
 
