@@ -1,0 +1,65 @@
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.scheme-wrapper {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background: #fafafa;
+    border-radius: 0.5rem;
+}
+
+/* Плавные переходы для уровня и поворота клапанов */
+#water-level-rect,
+#scale-fill {
+    transition: height 0.3s ease, y 0.3s ease;
+}
+
+#valve-hot-line,
+#valve-cold-line,
+#valve-out-line {
+    transition: transform 0.3s ease;
+}
+
+/* Стили для текста на схеме */
+text {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Модальное окно – оставляем как есть, но можно донастроить */
+.modal-content {
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 600px) {
+    .scheme-wrapper {
+        padding: 0.5rem;
+    }
+    svg text {
+        font-size: 10px !important;
+    }
+}
+
+/* Кнопки графиков на схеме */
+g[cursor="pointer"] rect {
+    transition: opacity 0.2s;
+}
+g[cursor="pointer"]:hover rect {
+    opacity: 1;
+}
+g[cursor="pointer"] rect {
+    opacity: 0.7;
+}
