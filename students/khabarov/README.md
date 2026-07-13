@@ -55,8 +55,8 @@ python history_logger.py
 ```
 ##  Документация и полезные ссылки
 
-[OPC](https://github.com/fandaray/practice_project/tree/main/students/khabarov/docs/opc).
-[Flask](https://github.com/fandaray/practice_project/tree/main/students/khabarov/docs/flask).
-[Модели](https://github.com/fandaray/practice_project/tree/main/students/khabarov/docs/models).
-[Git](https://github.com/fandaray/practice_project/tree/main/students/khabarov/docs/git).
-[Github flow](https://github.com/fandaray/practice_project/tree/main/students/khabarov/docs/github_flow).
+[OPC](https://github.com/fandaray/practice_project/blob/main/students/khabarov/students/khabarov/docs/opc.md).
+[Flask](https://github.com/fandaray/practice_project/blob/main/students/khabarov/docs/flask.md).
+[Модели](https://github.com/fandaray/practice_project/blob/main/students/khabarov/docs/models.md).
+[Git](https://github.com/fandaray/practice_project/blob/main/students/khabarov/docs/git.md).
+[Github flow](https://github.com/fandaray/practice_project/blob/main/students/khabarov/docs/github%20flow.md).
