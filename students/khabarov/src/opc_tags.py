@@ -1,0 +1,18 @@
+TAGS = {
+    "ValveHotIn": {"writable": True, "initial": 0.0},
+    "ValveColdIn": {"writable": True, "initial": 0.0},
+    "ValveOut": {"writable": True, "initial": 0.0},
+    "ValveHotInCmd": {"writable": True, "initial": 0.0},
+    "ValveColdInCmd": {"writable": True, "initial": 0.0},
+    "ValveOutCmd": {"writable": True, "initial": 0.0},
+    "InputTempHot": {"writable": True, "initial": 0.0},
+    "InputTempCold": {"writable": True, "initial": 0.0},
+    "OutputTemp": {"writable": True, "initial": 0.0},
+    "WaterLevel": {"writable": True, "initial": 0.0},
+    "AutoMode": {"writable": True, "initial": False},
+    "TargetTemp": {"writable": True, "initial": 50.0},
+    "TargetLevel": {"writable": True, "initial": 50.0},
+    "StartSimulation": {"writable": True, "initial": False},
+    "ValveInTravelTime": {"writable": True, "initial": 60.0},
+    "ValveOutTravelTime": {"writable": True, "initial": 60.0},
+}
