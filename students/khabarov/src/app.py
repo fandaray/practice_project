@@ -48,6 +48,7 @@ def get_data():
         target_temp = get_opc_value("TargetTemp")
         target_level = get_opc_value("TargetLevel")
         auto_mode = get_opc_value("AutoMode")
+        controller_type = get_opc_value("ControllerType")
 
         reached = abs(curr_temp - target_temp) <= 5.0 and abs(curr_level - target_level) <= 5.0
 
@@ -62,7 +63,8 @@ def get_data():
             "target_temp": target_temp,
             "target_level": target_level,
             "targets_reached": reached,
-            "auto_mode": auto_mode
+            "auto_mode": auto_mode,
+            "controller_type": controller_type
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -87,6 +89,7 @@ def set_auto():
         data = request.json
         set_opc_value("TargetTemp", float(data.get("target_temp")))
         set_opc_value("TargetLevel", float(data.get("target_level")))
+        set_opc_value("ControllerType", int(data.get("controller_type", 0)))
         set_opc_value("AutoMode", True)
         return jsonify({"status": "ok"})
     except Exception as e:

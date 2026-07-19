@@ -122,6 +122,7 @@ function applyDynamicsSettings() {
 function validateAndSetAuto() {
     const tempInput = document.getElementById("target-temp").value;
     const levelInput = document.getElementById("target-level").value;
+    const controllerType = document.getElementById("controller-type").value;
     
     const temp = parseFloat(tempInput);
     const level = parseFloat(levelInput);
@@ -134,7 +135,11 @@ function validateAndSetAuto() {
     fetch("/set_auto", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ target_temp: temp, target_level: level })
+        body: JSON.stringify({ 
+            target_temp: temp, 
+            target_level: level,
+            controller_type: parseInt(controllerType)
+        })
     })
     .then(res => res.json())
     .then(data => {
