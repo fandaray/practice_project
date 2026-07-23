@@ -1,0 +1,429 @@
+:root {
+  --bg: #10141A;
+  --panel: #1A2029;
+  --panel-raised: #212836;
+  --line: #2B3340;
+  --metal: #3A4250;
+  --hot: #E8A33D;
+  --cold: #3E8FC4;
+  --good: #4CAF6D;
+  --alarm: #E5484D;
+  --text: #D7DCE2;
+  --text-dim: #75818F;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --sans: "Archivo", "Inter", system-ui, sans-serif;
+  --sans-display: "Archivo Expanded", "Archivo", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--sans);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar__id { display: flex; align-items: baseline; gap: 14px; }
+
+.tag-code {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--hot);
+  background: rgba(232, 163, 61, 0.12);
+  border: 1px solid rgba(232, 163, 61, 0.35);
+  border-radius: 4px;
+  padding: 3px 8px;
+  letter-spacing: 0.04em;
+}
+
+.topbar__title {
+  font-family: var(--sans-display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.topbar__title .dim { color: var(--text-dim); font-weight: 600; }
+
+.topbar__status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+.clock {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text);
+  border-left: 1px solid var(--line);
+  padding-left: 12px;
+  margin-left: 4px;
+}
+
+.lamp {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--text-dim);
+  box-shadow: none;
+  transition: background .2s, box-shadow .2s;
+}
+.lamp--connected { background: var(--good); box-shadow: 0 0 8px 1px rgba(76, 175, 109, .7); animation: pulse 2.4s ease-in-out infinite; }
+.lamp--disconnected { background: var(--alarm); box-shadow: 0 0 8px 1px rgba(229, 72, 77, .7); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  padding: 18px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+@media (max-width: 880px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+.mimic-panel, .control-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.mimic-panel { padding: 8px; }
+
+#mimic { width: 100%; height: auto; display: block; }
+
+/* --- мнемосхема: трубы, клапаны, ёмкость --- */
+
+.pipe { stroke: var(--metal); stroke-width: 10; stroke-linecap: round; fill: none; }
+.pipe--hot { stroke: #4A3A2A; }
+.pipe--cold { stroke: #2A3A48; }
+.pipe--out { stroke: #33383F; }
+
+.pipe-flow {
+  stroke-width: 4;
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 8 10;
+  opacity: 0;
+  transition: opacity .3s;
+  animation: flow-dash 1s linear infinite;
+}
+.pipe-flow--hot { stroke: var(--hot); }
+.pipe-flow--cold { stroke: var(--cold); }
+.pipe-flow--out { stroke: #9FB0C2; }
+.pipe-flow.is-flowing { opacity: 0.95; }
+
+@keyframes flow-dash {
+  to { stroke-dashoffset: -36; }
+}
+
+.pipe-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  fill: var(--text-dim);
+  letter-spacing: 0.03em;
+}
+
+.valve-body { fill: var(--panel-raised); stroke: var(--metal); stroke-width: 3; }
+.valve-disc { stroke: var(--text); stroke-width: 4; stroke-linecap: round; transition: transform .4s ease; transform-origin: center; }
+
+.valve-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  fill: var(--text-dim);
+}
+.valve-readout {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--text);
+}
+
+.tank-shell { fill: var(--panel-raised); stroke: var(--metal); stroke-width: 4; }
+.tank-inner-wall { fill: #0D1116; stroke: var(--line); stroke-width: 1; }
+
+#waterBody { transition: y .8s ease, height .8s ease; }
+
+.wave { fill: rgba(255,255,255,0.10); }
+.wave--a { animation: wave-drift 6s linear infinite; }
+.wave--b { animation: wave-drift 9s linear infinite reverse; opacity: .6; }
+
+@keyframes wave-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-220px); }
+}
+
+.level-tick { stroke: var(--text-dim); stroke-width: 1; }
+.level-tick-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  fill: var(--text-dim);
+}
+
+.tank-tag {
+  font-family: var(--sans-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  fill: var(--text-dim);
+}
+
+.heater-coil {
+  fill: none;
+  stroke: var(--text-dim);
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke .4s;
+}
+.heater-coil.is-active {
+  stroke: var(--hot);
+  filter: drop-shadow(0 0 4px rgba(232,163,61,.8));
+  animation: heater-glow 1.2s ease-in-out infinite;
+}
+@keyframes heater-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .55; }
+}
+
+/* --- панель управления --- */
+
+.control-panel {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.readouts { display: flex; flex-direction: column; gap: 12px; }
+
+.readout {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 12px;
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.readout__label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+.readout__value {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+.readout__value small { font-size: 11px; color: var(--text-dim); font-weight: 500; }
+
+.alarms { display: flex; flex-direction: column; gap: 6px; }
+.alarm {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.alarm.is-active { color: var(--alarm); border-color: rgba(229,72,77,.5); background: rgba(229,72,77,.08); }
+.lamp--sm { width: 8px; height: 8px; }
+.alarm.is-active .lamp--sm { background: var(--alarm); box-shadow: 0 0 6px rgba(229,72,77,.8); animation: pulse 1s ease-in-out infinite; }
+
+.interlocks { display: flex; flex-direction: column; gap: 6px; }
+.interlocks__title {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  font-weight: 700;
+  font-family: var(--mono);
+}
+.interlock {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.interlock.is-active {
+  color: #F2C572;
+  border-color: rgba(232,163,61,.5);
+  background: rgba(232,163,61,.10);
+}
+.interlock.is-active .lamp--sm {
+  background: var(--hot);
+  box-shadow: 0 0 6px rgba(232,163,61,.8);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+/* --- индикатор "клапаном/нагревателем управляет автоматика, не оператор" --- */
+.auto-badge {
+  fill: var(--panel);
+  stroke: var(--line);
+  stroke-width: 1.5;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.auto-badge-text {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  fill: var(--text-dim);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+}
+.auto-badge.is-active,
+.auto-badge.is-active + .auto-badge-text {
+  opacity: 1;
+}
+.auto-badge.is-active {
+  stroke: var(--hot);
+  fill: rgba(232,163,61,.15);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.auto-badge.is-active ~ .auto-badge-text { fill: var(--hot); }
+
+.valve-disc.is-overridden { stroke: var(--hot); }
+
+.auto-controls { display: flex; flex-direction: column; gap: 14px; }
+.auto-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.auto-control__header { display: flex; align-items: center; gap: 10px; }
+.auto-control__title {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.switch { position: relative; display: inline-block; width: 34px; height: 18px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch__slider {
+  position: absolute; cursor: pointer; inset: 0;
+  background: var(--line);
+  border: 1px solid var(--metal);
+  border-radius: 999px;
+  transition: background .2s;
+}
+.switch__slider::before {
+  content: "";
+  position: absolute;
+  height: 12px; width: 12px;
+  left: 2px; top: 2px;
+  background: var(--text-dim);
+  border-radius: 50%;
+  transition: transform .2s, background .2s;
+}
+.switch input:checked + .switch__slider { background: rgba(232,163,61,.25); border-color: var(--hot); }
+.switch input:checked + .switch__slider::before { transform: translateX(16px); background: var(--hot); }
+
+.section-divider {
+  margin: 4px 0 0 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  border-top: 1px dashed var(--line);
+  padding-top: 12px;
+}
+
+.setpoints { display: flex; flex-direction: column; gap: 14px; }
+.setpoint { display: flex; flex-direction: column; gap: 4px; transition: opacity .2s; }
+.setpoint.is-disabled { opacity: 0.4; pointer-events: none; }
+.setpoint label {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  font-weight: 600;
+  font-family: var(--mono);
+}
+.setpoint__value {
+  align-self: flex-end;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--hot);
+  border: 2px solid #0D1116;
+  cursor: pointer;
+  margin-top: -6px;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--hot);
+  border: 2px solid #0D1116;
+  cursor: pointer;
+}
+
+.footnote {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lamp--connected, .wave--a, .wave--b, .pipe-flow, .heater-coil.is-active,
+  .alarm.is-active .lamp--sm, .interlock.is-active .lamp--sm, .auto-badge.is-active {
+    animation: none !important;
+  }
+}

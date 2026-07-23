@@ -38,7 +38,7 @@ OPC UA сервер бойлера.
   2. прогоняет шаг модели,
   3. публикует новые измерения и алармы.
 
-Запуск:  python server_main.py
+Запуск:  python -m server.opcua_server
 """
 
 import time
@@ -47,7 +47,7 @@ import threading
 
 from opcua import Server, ua
 
-from boiler_model import BoilerModel
+from boiler_core.model import BoilerModel
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger("boiler-opcua-server")
@@ -176,3 +176,7 @@ class BoilerOpcUaServer:
 
     def stop(self):
         self._stop_event.set()
+
+
+if __name__ == "__main__":
+    BoilerOpcUaServer().run()
