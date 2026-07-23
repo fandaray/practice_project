@@ -1,8 +1,8 @@
 """
-Периодически опрашивает сервер бойлера через opcua_client
+Клиент OPC UA, который периодически опрашивает сервер бойлера
 и пишет срез параметров в SQLite (историческая таблица тренда).
 
-Запуск:  python history_logger.py
+Запуск:  python -m logger.history_logger
 """
 
 import time
@@ -11,13 +11,34 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
-from opcua_client import connect, resolve_nodes, poll_values
+from opcua import Client
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger("boiler-history-logger")
 
+SERVER_URL = "opc.tcp://localhost:4841/boiler/server/"
+NAMESPACE_URI = "http://example.org/boiler-scada"
 POLL_PERIOD_S = 5.0
 DB_PATH = Path(__file__).resolve().parent.parent / "data" / "boiler_history.sqlite3"
+
+# пути заданы БЕЗ индекса пространства имён - реальный индекс сервер выдаёт
+# динамически при регистрации namespace и может отличаться от запуска к запуску
+TAGS = {
+    "level": ["Boiler", "Measurements", "Level"],
+    "temperature": ["Boiler", "Measurements", "Temperature"],
+    "temperature_valid": ["Boiler", "Measurements", "TemperatureValid"],
+    "pressure": ["Boiler", "Measurements", "Pressure"],
+    "hot_valve": ["Boiler", "Setpoints", "HotValve"],
+    "cold_valve": ["Boiler", "Setpoints", "ColdValve"],
+    "outlet_valve": ["Boiler", "Setpoints", "OutletValve"],
+    "level_auto": ["Boiler", "Setpoints", "LevelAuto"],
+    "temperature_auto": ["Boiler", "Setpoints", "TemperatureAuto"],
+    "level_high_alarm": ["Boiler", "Alarms", "LevelHigh"],
+    "level_low_alarm": ["Boiler", "Alarms", "LevelLow"],
+    "overtemp_alarm": ["Boiler", "Alarms", "OverTemperature"],
+    "interlock_overflow": ["Boiler", "Interlocks", "Overflow"],
+    "interlock_overtemp": ["Boiler", "Interlocks", "Overtemp"],
+}
 
 
 def ensure_schema(conn: sqlite3.Connection):
@@ -46,6 +67,21 @@ def ensure_schema(conn: sqlite3.Connection):
     conn.commit()
 
 
+def resolve_nodes(client: Client):
+    ns = client.get_namespace_index(NAMESPACE_URI)
+    objects = client.get_objects_node()
+    return {
+        name: objects.get_child([f"{ns}:{part}" for part in path])
+        for name, path in TAGS.items()
+    }
+
+
+def poll_once(nodes: dict) -> dict:
+    values = {name: node.get_value() for name, node in nodes.items()}
+    values["ts"] = datetime.now(timezone.utc).isoformat()
+    return values
+
+
 def store(conn: sqlite3.Connection, row: dict):
     conn.execute(
         """
@@ -69,13 +105,14 @@ def run():
     conn = sqlite3.connect(DB_PATH)
     ensure_schema(conn)
 
-    client = connect()
+    client = Client(SERVER_URL)
+    client.connect()
+    log.info("Подключились к %s", SERVER_URL)
     nodes = resolve_nodes(client)
 
     try:
         while True:
-            row = poll_values(nodes)
-            row["ts"] = datetime.now(timezone.utc).isoformat()
+            row = poll_once(nodes)
             store(conn, row)
             log.info(
                 "level=%.1f%% temp=%.1f°C pressure=%.2f bar",
