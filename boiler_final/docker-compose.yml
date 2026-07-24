@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  # 1. OPC UA сервер с моделью бойлера (порт 4840, обновление раз в секунду)
+  opcua-server:
+    build: .
+    container_name: boiler-opcua-server
+    command: python server_main.py
+    ports:
+      - "4840:4840"
+    environment:
+      - OPC_ENDPOINT=opc.tcp://0.0.0.0:4840/boiler/server/
+    restart: unless-stopped
+
+  # 2. Веб-панель SCADA (Flask), сама выступает OPC UA клиентом
+  web-dashboard:
+    build: .
+    container_name: boiler-web-dashboard
+    command: python app.py
+    ports:
+      - "5050:5050"
+    environment:
+      - OPC_ENDPOINT_CLIENT=opc.tcp://opcua-server:4840/boiler/server/
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=5050
+    depends_on:
+      - opcua-server
+    restart: unless-stopped
+
+  # 3. Логгер истории в SQLite — отдельный процесс, пишет раз в 5 секунд
+  history-logger:
+    build: .
+    container_name: boiler-history-logger
+    command: python history_logger.py
+    environment:
+      - OPC_ENDPOINT_CLIENT=opc.tcp://opcua-server:4840/boiler/server/
+      - DB_FILE=/app/data/boiler_history.sqlite3
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - opcua-server
+    restart: unless-stopped

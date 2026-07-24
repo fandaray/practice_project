@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TK-101 · Boiler Mix Station — Local Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Archivo+Expanded:wght@600;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar__id">
+      <span class="tag-code">TK-101</span>
+      <span class="topbar__title">BOILER MIX STATION <span class="dim">/ LOCAL PANEL</span></span>
+    </div>
+    <div class="topbar__status">
+      <div class="lamp" id="connLamp"></div>
+      <span id="connText">CONNECTING…</span>
+      <span class="clock" id="clock">--:--:--</span>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ===================== МНЕМОСХЕМА ===================== -->
+    <section class="mimic-panel">
+      <svg id="mimic" viewBox="0 0 720 460" preserveAspectRatio="xMidYMid meet">
+
+        <defs>
+          <linearGradient id="waterGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop id="waterStopTop" offset="0%" stop-color="#3E8FC4" />
+            <stop id="waterStopBottom" offset="100%" stop-color="#2C6690" />
+          </linearGradient>
+          <clipPath id="tankInterior">
+            <rect x="270" y="90" width="220" height="260" rx="10" />
+          </clipPath>
+        </defs>
+
+        <!-- ---- трубопровод: горячая вода (сверху слева) ---- -->
+        <g class="pipe-group">
+          <line x1="60" y1="70" x2="290" y2="70" class="pipe pipe--hot" />
+          <line x1="290" y1="70" x2="290" y2="90" class="pipe pipe--hot" />
+          <line x1="60" y1="70" x2="290" y2="70" class="pipe-flow pipe-flow--hot" id="flowHot" />
+          <line x1="290" y1="70" x2="290" y2="90" class="pipe-flow pipe-flow--hot" id="flowHotDown" />
+          <text x="64" y="56" class="pipe-label" id="hotSupplyLabel">HOT SUPPLY 90°C</text>
+
+          <g id="valveHot" class="valve-symbol" transform="translate(170,70)">
+            <circle r="14" class="valve-body" />
+            <line x1="-11" y1="0" x2="11" y2="0" class="valve-disc" id="valveHotDisc" />
+            <circle r="7" cx="20" cy="-16" class="auto-badge" id="hotAutoBadge" />
+            <text x="20" y="-13" text-anchor="middle" class="auto-badge-text">A</text>
+          </g>
+          <text x="170" y="46" text-anchor="middle" class="valve-tag">FV-101</text>
+          <text x="170" y="98" text-anchor="middle" class="valve-readout" id="valveHotReadout">0%</text>
+        </g>
+
+        <!-- ---- трубопровод: холодная вода (сверху справа) ---- -->
+        <g class="pipe-group">
+          <line x1="660" y1="70" x2="430" y2="70" class="pipe pipe--cold" />
+          <line x1="430" y1="70" x2="430" y2="90" class="pipe pipe--cold" />
+          <line x1="660" y1="70" x2="430" y2="70" class="pipe-flow pipe-flow--cold" id="flowCold" />
+          <line x1="430" y1="70" x2="430" y2="90" class="pipe-flow pipe-flow--cold" id="flowColdDown" />
+          <text x="574" y="56" class="pipe-label" text-anchor="end" id="coldSupplyLabel">COLD SUPPLY 10°C</text>
+
+          <g id="valveCold" class="valve-symbol" transform="translate(550,70)">
+            <circle r="14" class="valve-body" />
+            <line x1="-11" y1="0" x2="11" y2="0" class="valve-disc" id="valveColdDisc" />
+            <circle r="7" cx="-20" cy="-16" class="auto-badge" id="coldAutoBadge" />
+            <text x="-20" y="-13" text-anchor="middle" class="auto-badge-text">A</text>
+          </g>
+          <text x="550" y="46" text-anchor="middle" class="valve-tag">FV-102</text>
+          <text x="550" y="98" text-anchor="middle" class="valve-readout" id="valveColdReadout">0%</text>
+        </g>
+
+        <!-- ---- корпус ёмкости ---- -->
+        <rect x="266" y="86" width="228" height="268" rx="14" class="tank-shell" />
+        <rect x="270" y="90" width="220" height="260" rx="10" class="tank-inner-wall" />
+
+        <g clip-path="url(#tankInterior)">
+          <rect id="waterBody" x="270" y="350" width="220" height="0" fill="url(#waterGradient)" />
+          <g id="waterSurface">
+            <path class="wave wave--a" d="M270,0 Q 300,-6 330,0 T 390,0 T 450,0 T 490,0 L 490,20 L 270,20 Z" />
+            <path class="wave wave--b" d="M270,0 Q 300,5 330,0 T 390,0 T 450,0 T 490,0 L 490,20 L 270,20 Z" />
+          </g>
+        </g>
+
+        <line x1="500" y1="90" x2="506" y2="90" class="level-tick" />
+        <line x1="500" y1="220" x2="506" y2="220" class="level-tick" />
+        <line x1="500" y1="350" x2="506" y2="350" class="level-tick" />
+        <text x="510" y="93" class="level-tick-label">100</text>
+        <text x="510" y="223" class="level-tick-label">50</text>
+        <text x="510" y="353" class="level-tick-label">0</text>
+
+        <text x="380" y="112" text-anchor="middle" class="tank-tag">TK-101</text>
+
+        <g transform="translate(380, 330)">
+          <path d="M -30,0 Q -22,-14 -14,0 T 2,0 T 18,0 T 30,0" class="heater-coil" id="heaterCoil" />
+          <circle r="7" cx="42" cy="0" class="auto-badge" id="heaterAutoBadge" />
+          <text x="42" y="3" text-anchor="middle" class="auto-badge-text">A</text>
+        </g>
+
+        <!-- ---- сливной трубопровод (снизу) ---- -->
+        <g class="pipe-group">
+          <line x1="380" y1="360" x2="380" y2="410" class="pipe pipe--out" />
+          <line x1="380" y1="410" x2="620" y2="410" class="pipe pipe--out" />
+          <line x1="380" y1="360" x2="380" y2="410" class="pipe-flow pipe-flow--out" id="flowOutDown" />
+          <line x1="380" y1="410" x2="620" y2="410" class="pipe-flow pipe-flow--out" id="flowOut" />
+          <text x="470" y="430" class="pipe-label">TO DISTRIBUTION</text>
+
+          <g id="valveOut" class="valve-symbol" transform="translate(380,410)">
+            <circle r="14" class="valve-body" />
+            <line x1="-11" y1="0" x2="11" y2="0" class="valve-disc" id="valveOutDisc" />
+          </g>
+          <text x="380" y="392" text-anchor="middle" class="valve-tag">FV-103</text>
+          <text x="380" y="446" text-anchor="middle" class="valve-readout" id="valveOutReadout">0%</text>
+        </g>
+
+      </svg>
+    </section>
+
+    <!-- ===================== ПАНЕЛЬ УПРАВЛЕНИЯ ===================== -->
+    <section class="control-panel">
+
+      <div class="readouts">
+        <div class="readout">
+          <span class="readout__label">LEVEL</span>
+          <span class="readout__value" id="rLevel">--.- <small>%</small></span>
+        </div>
+        <div class="readout">
+          <span class="readout__label">TEMPERATURE</span>
+          <span class="readout__value" id="rTemp">--.- <small>°C</small></span>
+        </div>
+        <div class="readout">
+          <span class="readout__label">PRESSURE</span>
+          <span class="readout__value" id="rPressure">-.-- <small>bar</small></span>
+        </div>
+      </div>
+
+      <div class="alarms">
+        <div class="alarm" id="alarmHigh"><span class="lamp lamp--sm"></span> LEVEL HIGH</div>
+        <div class="alarm" id="alarmLow"><span class="lamp lamp--sm"></span> LEVEL LOW</div>
+        <div class="alarm" id="alarmTemp"><span class="lamp lamp--sm"></span> OVERTEMP</div>
+      </div>
+
+      <div class="interlocks">
+        <div class="interlocks__title">AUTO INTERLOCKS</div>
+        <div class="interlock" id="ilOverflow">
+          <span class="lamp lamp--sm"></span> OVERFLOW TRIP · INLETS FORCED CLOSED
+        </div>
+        <div class="interlock" id="ilOvertemp">
+          <span class="lamp lamp--sm"></span> OVERTEMP TRIP · HEATER FORCED OFF
+        </div>
+      </div>
+
+      <div class="auto-controls">
+        <div class="auto-control">
+          <div class="auto-control__header">
+            <label class="switch">
+              <input type="checkbox" id="levelAutoToggle">
+              <span class="switch__slider"></span>
+            </label>
+            <span class="auto-control__title">LIC-101 · LEVEL AUTO CONTROL</span>
+          </div>
+          <div class="setpoint">
+            <label for="sLevelSp">TARGET LEVEL</label>
+            <input type="range" min="0" max="100" value="50" id="sLevelSp" data-tag="level_setpoint" data-unit="%">
+            <span class="setpoint__value" id="sLevelSpVal">50%</span>
+          </div>
+        </div>
+        <div class="auto-control">
+          <div class="auto-control__header">
+            <label class="switch">
+              <input type="checkbox" id="tempAutoToggle">
+              <span class="switch__slider"></span>
+            </label>
+            <span class="auto-control__title">TIC-101 · TEMPERATURE AUTO CONTROL</span>
+          </div>
+          <div class="setpoint">
+            <label for="sTempSp">TARGET TEMPERATURE</label>
+            <input type="range" min="10" max="95" value="60" id="sTempSp" data-tag="temperature_setpoint" data-unit="°C">
+            <span class="setpoint__value" id="sTempSpVal">60°C</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="section-divider">MANUAL OVERRIDE (при выключенном AUTO)</p>
+
+      <div class="setpoints">
+        <div class="setpoint">
+          <label for="sHot">FV-101 · HOT VALVE</label>
+          <input type="range" min="0" max="100" value="50" id="sHot" data-tag="hot_valve" data-unit="%">
+          <span class="setpoint__value" id="sHotVal">50%</span>
+        </div>
+        <div class="setpoint">
+          <label for="sCold">FV-102 · COLD VALVE</label>
+          <input type="range" min="0" max="100" value="50" id="sCold" data-tag="cold_valve" data-unit="%">
+          <span class="setpoint__value" id="sColdVal">50%</span>
+        </div>
+        <div class="setpoint">
+          <label for="sOut">FV-103 · OUTLET VALVE</label>
+          <input type="range" min="0" max="100" value="100" id="sOut" data-tag="outlet_valve" data-unit="%">
+          <span class="setpoint__value" id="sOutVal">100%</span>
+        </div>
+        <div class="setpoint">
+          <label for="sHeat">EH-101 · HEATER POWER</label>
+          <input type="range" min="0" max="100" value="0" id="sHeat" data-tag="heater" data-unit="%">
+          <span class="setpoint__value" id="sHeatVal">0%</span>
+        </div>
+      </div>
+
+      <p class="section-divider">ADVANCED · SUPPLY &amp; ACTUATOR DYNAMICS</p>
+
+      <div class="setpoints">
+        <div class="setpoint">
+          <label for="sHotSupply">HOT SUPPLY TEMPERATURE</label>
+          <input type="range" min="0" max="100" value="90" id="sHotSupply" data-tag="input_temp_hot" data-unit="°C">
+          <span class="setpoint__value" id="sHotSupplyVal">90°C</span>
+        </div>
+        <div class="setpoint">
+          <label for="sColdSupply">COLD SUPPLY TEMPERATURE</label>
+          <input type="range" min="0" max="100" value="10" id="sColdSupply" data-tag="input_temp_cold" data-unit="°C">
+          <span class="setpoint__value" id="sColdSupplyVal">10°C</span>
+        </div>
+        <div class="setpoint">
+          <label for="sTravelTime">VALVE TRAVEL TIME</label>
+          <input type="range" min="0.5" max="60" step="0.5" value="5" id="sTravelTime" data-tag="valve_travel_time" data-unit="s">
+          <span class="setpoint__value" id="sTravelTimeVal">5s</span>
+        </div>
+      </div>
+
+      <p class="footnote">OPC UA · opc.tcp://localhost:4840/boiler/server/</p>
+    </section>
+
+  </main>
+
+  <script src="{{ url_for('static', filename='js/scada.js') }}"></script>
+</body>
+</html>
